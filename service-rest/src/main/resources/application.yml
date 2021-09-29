@@ -1,0 +1,47 @@
+spring:
+  data:
+    mongodb:
+      database: test
+      port: 27017
+      host: localhost
+  cloud:
+    stream:
+      source: testRequestProducer
+      bindings:
+        testRequestProducer-out-0:
+          destination: test.topic
+          binder: rabbit
+      binders:
+        rabbit:
+          type: rabbit
+          defaultCandidate: false
+          inheritEnvironment: false
+          environment:
+            spring:
+              rabbitmq:
+                host: localhost
+                port: 5672
+                username: guest
+                password: guest
+
+---
+spring:
+  profiles: docker-compose
+  data:
+    mongodb:
+      host: mongo
+      port: 27017
+  cloud:
+    stream:
+      binders:
+        rabbit:
+          type: rabbit
+          defaultCandidate: false
+          inheritEnvironment: false
+          environment:
+            spring:
+              rabbitmq:
+                host: rabbitmq
+                port: 5672
+                username: guest
+                password: guest
