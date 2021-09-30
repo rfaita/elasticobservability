@@ -1,18 +1,14 @@
 spring:
   application:
-    name: service-rest
-  data:
-    mongodb:
-      database: test
-      port: 27017
-      host: localhost
+    name: service-consumer
   cloud:
     stream:
-      source: testRequestProducer
+      function.definition: testConsumer
       bindings:
-        testRequestProducer-out-0:
+        testConsumer-in-0:
           destination: test.topic
           binder: rabbit
+          group: test-consumer-group
       binders:
         rabbit:
           type: rabbit
@@ -42,10 +38,6 @@ management:
 ---
 spring:
   profiles: docker-compose
-  data:
-    mongodb:
-      host: mongo
-      port: 27017
   cloud:
     stream:
       binders:

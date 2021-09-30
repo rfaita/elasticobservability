@@ -92,7 +92,22 @@ services:
     ports:
       - "9080:8080"
     environment:
-      - WAIT_FOR_IT=rabbitmq:5672 mongo:27017 apm-server:8200
+      - WAIT_FOR_IT=rabbitmq:5672 mongo:27017 apm-server:8200 elasticsearch:9200
+      - JAVA_OPTS=-Xmx256m -Xms128m -Dspring.profiles.active=docker-compose
+    networks:
+      - network01
+
+  service-consumer:
+    build: 
+      context: service-consumer
+      dockerfile: src/main/docker/Dockerfile
+      args:
+        JAR_FILE: target/app.jar
+        UTIL_DIR: src/main/docker/
+    ports:
+      - "9081:8080"
+    environment:
+      - WAIT_FOR_IT=rabbitmq:5672 mongo:27017 apm-server:8200 elasticsearch:9200
       - JAVA_OPTS=-Xmx256m -Xms128m -Dspring.profiles.active=docker-compose
     networks:
       - network01
